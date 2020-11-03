@@ -1,0 +1,59 @@
+---
+title: "Trump to get 48% of popular vote but win 271 college votes in the 2020 US Election"
+author: "Khizer Asad"
+date: "02/11/2020"
+output:
+  bookdown::pdf_document2:
+    citation_package: natbib
+bibliography: references.bib
+abstract: |
+  | Using generalized linear mixed-effect model on the Democracy Fund's Nationscape survey from June 2020 (@survey) the results of the US federal election are forecasted. This model is then post-stratified using the IPUMS American Community Survey from 2018 (@census) to ensure the estimate is robustly applicable. Based on this data we find the most likely outcome of the election is another term for current president Donald Trump; he is projected to win 271 electoral college votes but only 48.4% of the popular vote. 
+  |
+  | **Keywords:** forecasting; US 2020 elections; Trump; Biden; Multilevel regression; Post-stratification
+subtitle: Forecasting using a survey from June 2020 and post-stratification
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+The 2016 US federal election resulted in an unexpected victory for Republican Donald Trump. Leading up to the election the majority of the public believed that Trump would not win, as polls confidently forecasted his loss (@art). Now leading up to the 2020 election where Trump is running for re-election faith in polling has been shaken. The reasons for polling failing to predict the election result in 2016 are still debated, with one of the stand out reasons being a non-representative sampling. Meaning that results from polls lacked audience representing all Americans, thus leading to biased data to predict the election outcome (@art).
+
+Our goal is to accurately predict the 2020 election outcome by circumventing the mistakes made in 2016. To do so we will employ two statistics techniques: multilevel regression and post-stratification. Multilevel modeling allows us to effectively extract more data from each variable when compared to a standard regression model. It does so by taking our predictor variables (e.g. age, gender, race, etc.) independent of one another to determine their effect on our outcome (election result). Post-stratification gives us the ability to create weighted averages for peoples election preferences contingent on their specific characteristics. These two techniques used together are known as multilevel regression with post-stratification (MRP). 
+
+One of the inherent limitations of election polling is that there will be certain populations that will inherently be more averse to participating, and so will be chronically under-represented in polls. MRP allows us to tackle this lack of data to create a representative sample that can more accurately predict the election. For instance, and this is a not a practical example, perhaps white men from Alabama may be less likely to participate in election polls. So if they are chronically under-represented then their voting tendency will not be fully captured in polls. MRP allows us to prevent that by looking at the variables independently, and will generate the the voting behaviour using averages from people that are white, male, and from Alabama. 
+
+This paper introduces two data sets analyzed using MRP, and introduces a model for predicting the 2020 US election outcome. 
+
+# Data
+
+The Democracy Fund has kindly supplied us with the results from their Nationscape survey, which is a series of polls on political views and electoral behaviour (@survey). For this study we will be using the most recent survey conducted on 25 June 2020. This data is collected via online surveys from a selected sample of people that have opted in to receiving surveys, so has an almost 75% response rate. They also filter out what they believe are falsified responses, and weigh the responses so that they are reflective of the general American populace. With approximately 6500 responses to the survey it can perhaps provide accurate data for predicting the election outcome. Overall this seems like a strong survey to use, though a caveat would be that the population from which the survey may inherently in itself fail to capture a representative sample given the barrier to entry. But this is why we use MRP! 
+
+The post-stratification data set, the 2018 American Community Survey (ACS) conducted by IPUMS (@census). It is a comprehensive census-esque survey that targets 3 million people across the United States to collect an already stratified sample. Surveys are mailed to respondents selected via their stratification system, and if it is not completed the recipients also receive a follow up call to conduct their survey over the phone. With such a large sample size it is a strong resource to use for post-stratification, as it can capture a more accurate snapshot of the country. 
+
+# Model
+
+In order to post-stratify we require overlapping variables between our two data sets, of which we have eight. From those eight we have selected seven to use as predictors in the model: state, sex, age, race, Hispanic (yes/no), foreign born, and family income. These seven variables will be used as independent variables to estimate the dependent variable, which is the probability of voting for Joe Biden. Education has been omitted as the results from the two data sets were too challenging to collate. To conduct our analysis we use R (@R).
+
+For the multilevel regression a generalized linear mixed model (GLMM) will be employed the model is represented as: 
+
+$$\vec{y} = X\vec{\beta} + Z\vec{\mu} + \epsilon$$ 
+The dependent variable, $\vec{y}$ is a 4921 x 1 (number of observations) stating if an individual is voting for Biden. $X$ and $Z$ are 4921 x 7 matrices containing the 7 independent variable values for each respondent. $\vec{\beta}$ and $\vec{\mu}$ are out intercept and slope vectors, which is what we seek to estimate with this model. 
+
+# Results 
+
+After executing the GLMM regression and post-stratifying the results to the 122,693 different combination of cells from the ACS data our findings are as follows: 
+* Trump is forecasted to lose the popular vote, but win in the electoral college. 
+* Biden will receive 51.6% of the popular vote, and Trump 48.4% (other candidate responses were omitted as they are highly unlikely to win)
+* Of the 538 electoral college votes, Joe Biden will receive 267 and Trump will win with the remaining 271. 
+
+# Discussion 
+
+Although this analysis used two very robust surveys, the forecasted results are highly likely not to hold true for various reasons. One being that our voter opinion survey is four months old, whilst other analyses use more recent and a combination of several polls to forecast the election (where Biden is currently touted to win). Additionally as we saw in 2016 polls are inherently flawed, and not always entirely accurate as by cause of their existence there will always be a sampling bias.  
+
+[all code can be found here](https://github.com/KhizerA/2020-US-Election)
+
+Complied using R Markdown (@rmr).
