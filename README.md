@@ -5,6 +5,7 @@
 - Date: 2 November 2020
 - Contact: k.asad@mail.utoronto.ca
 - License: MIT 
+
  Pre-Requisites: 
  - Need to request for and download the Voter Study Group Nationscape Data set 
    (https://www.voterstudygroup.org/publication/nationscape-data-set)
